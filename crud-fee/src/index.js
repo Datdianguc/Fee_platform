@@ -8,15 +8,21 @@ import './index.css';
 import Login from './components/login';
 import reportWebVitals from './reportWebVitals';
 import ErrorPage from './error-page';
+import Dashboard from './components/dashboard';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Login/>,
-    errorElement: <ErrorPage/>
+    element: <Login />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: "/dashboard",
+        element: <Dashboard/>
+      }
+    ]
   }
 ])
-
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
