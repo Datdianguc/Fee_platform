@@ -1,40 +1,22 @@
 import React, { useState } from "react";
 import "../css/login.css";
-import ForgotPassword from "./forgot-password";
+import { NavLink, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const navigate = useNavigate();
   const handleLogin = async (e) => {
     e.preventDefault();
-    const data = new FormData(e.current.target);
-    console.log(
-      data.get({
-        email: data.get("email"),
-        password: data.get("password"),
-      })
-    );
-    // const url = process.env.REACT_APP_BACKEND_URL + "/api/login";
-    // try {
-    //   const res = await axios.post(url, { email, password });
-    //   if (res.data.success === false) {
-    //     toast.error(res.data.message, {
-    //       autoClose: 5000,
-    //       position: "top-right",
-    //     });
-    //   } else {
-    //     toast.success("Login successful!", {
-    //       autoClose: 5000,
-    //       position: "top-right",
-    //     });
-    //     // Handle successful login (e.g., redirect, store token)
-    //   }
-    // } catch (error) {
-    //   toast.error("An error occurred while processing your request.", {
-    //     autoClose: 5000,
-    //     position: "top-right",
-    //   });
+    try {
+     const res = await axios.post("jdbc:postgresql://localhost:5432/fee_management/login", { email, password });
+     if (res.status === 200) {
+      navigate("/dashboard")
+     }
+    } catch (e) {
+      console.log("Có lỗi không xác định đã xảy ra");
+    }
   };
 
   return (
@@ -83,10 +65,8 @@ function Login() {
                   <span>Đăng nhập</span>
                 </button>
               </div>
-              <div className="text-center">
-                <ForgotPassword className="forgot-password">
-                  Quên mật khẩu?
-                </ForgotPassword>
+              <div className="text-center-forgot">
+                <NavLink to="/forgot-password">Quên mật khẩu?</NavLink>
               </div>
             </form>
           </div>

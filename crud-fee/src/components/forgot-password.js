@@ -1,36 +1,39 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { toast } from "react-toastify";
 import "../css/forgot-password.css";
-import Login from "./login";
+import axios from "axios";
+import { NavLink, useNavigate } from "react-router-dom";
 
 export default function ForgotPassword() {
-  const [resetEmail, setResetEmail] = useState("");
+  const [emailValue, setEmailValue] = useState("");
+  const [success, setSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
+
+  const handleResetClicked = async () => {
+    try {
+      await axios.put(`jdbc:postgresql://localhost:5432/fee_management/forgot-password/${emailValue}`);
+      setSuccess(true);
+      setTimeout(() => {
+        navigate("/login");
+      }, 3000);
+    } catch (e) {
+      setErrorMessage(e.message);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = new FormData(e.current.target);
+    const data = new FormData(e.target.value);
     console.log(data.get("email"));
-    //   // const url = process.env.REACT_APP_BACKEND_URL + "/api/forgotPassword"
-    //   const res = await axios.post(url, { email: email });
-    //   if ((res.data.success = false)) {
-    //     toast.error(res.data.success, {
-    //       autoClose: 5000,
-    //       position: "top-right",
-    //     });
-    //   } else {
-    //     toast.success(res.data.success, {
-    //       autoClose: 5000,
-    //       position: "top-right",
-    //     });
-    //   } catch {
-    // toast.error("Co loi khong xac dinh da xay ra.", {
-    //       autoClose: 5000,
-    //       position: "top-right",
-    // })}
   };
-  // Xử lí API ở đây, dòng 12 cần url, 13 cũng vậy, chạy được thì bỏ cmt
 
-  return (
+
+  return success ? (
+    <div>
+      <h1>Success</h1>
+      <p>Check your email for a reset link</p>
+    </div>
+  ) : (
     <div className="limiter">
       <div className="container-forgot">
         <img
@@ -48,26 +51,30 @@ export default function ForgotPassword() {
             <span className="forgot-form-title">
               <strong>Quên mật khẩu</strong>
             </span>
+            {errorMessage && <div className="fail">{errorMessage}</div>}
             <div className="wrap-input validate-input">
               <input
                 id="email"
                 type="email"
                 placeholder="Email"
-                value={resetEmail}
+                value={emailValue}
                 name="email"
                 autoComplete="email"
-                onChange={(e) => setResetEmail(e.target.value)}
+                onChange={(e) => setEmailValue(e.target.value)}
               />
             </div>
             <div className="container-forgot-form-btn">
-              <button type="submit" className="forgot-btn">
+              <button
+                disabled={!emailValue}
+                type="submit"
+                className="forgot-btn"
+                onClick={handleResetClicked}
+              >
                 <span>Đặt lại mật khẩu</span>
               </button>
             </div>
-            <div className="text-center">
-              <Login className="return-login">
-                Quay lại đăng nhập
-              </Login>
+            <div className="text-center-forgot">
+              <NavLink to="/">Quay lại đăng nhập</NavLink>
             </div>
           </form>
         </div>

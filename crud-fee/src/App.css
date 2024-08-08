@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+
+.active {
+  font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 13px;
+  color: #e5e5e5;
+  line-height: 1.5;
+  text-decoration: none;
+}
