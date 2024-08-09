@@ -11,10 +11,10 @@ export default function ForgotPassword() {
 
   const handleResetClicked = async () => {
     try {
-      await axios.put(`jdbc:postgresql://localhost:5432/fee_management/forgot-password/${emailValue}`);
+      await axios.post(`http://localhost:8081/api/users/forgot-password/${emailValue}`);
       setSuccess(true);
-      setTimeout(() => {
-        navigate("/login");
+      setTimeout(() =>  {
+        navigate("/");
       }, 3000);
     } catch (e) {
       setErrorMessage(e.message);
