@@ -10,12 +10,12 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-     const res = await axios.post("jdbc:postgresql://localhost:5432/fee_management/login", { email, password });
-     if (res.status === 200) {
+     const res = await axios.post("http://localhost:8081/api/users/login", {username: email, password });
+     if (res.data.status) {
       navigate("/dashboard")
      }
     } catch (e) {
-      console.log("Có lỗi không xác định đã xảy ra");
+      console.log("Có lỗi không xác định đã xảy ra", e);
     }
   };
 
