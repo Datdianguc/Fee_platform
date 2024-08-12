@@ -6,12 +6,14 @@ import {
 import Login from "./components/login";
 import ForgotPassword from "./components/forgot-password";
 import Dashboard from "./components/dashboard";
-
+import Account from "./components/create-account";
 const router = createBrowserRouter(createRoutesFromElements(
   <>
   <Route path="/" element={<Login />}></Route>
   <Route path="/forgot-password" element={<ForgotPassword />}></Route>
-  <Route path="/dashboard" element={<Dashboard />}></Route>
+  <Route path="/dashboard" element={<Dashboard />}>
+    <Route path="/dashboard/:name" element={<Account/>}></Route>
+  </Route>
   </>
 ))
 
