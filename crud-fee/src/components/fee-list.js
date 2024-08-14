@@ -1,9 +1,14 @@
-import React from 'react';
-import { Table, Tag, Button } from 'antd';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { Table, Tag, Input, Button } from 'antd';
+import "../css/fee-list.css"
+import { DeleteOutlined } from '@ant-design/icons';
+import { NavLink, Outlet } from 'react-router-dom';
 
+
+const { Search } = Input;
 const FeeManagement = () => {
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const onSearch = (value, _e, info) => console.log(info?.source, value);
     const data = [
         {
             key: '1',
@@ -14,6 +19,7 @@ const FeeManagement = () => {
             cycle: 'Hàng tháng',
             paymentMethod: 'Online',
             status: 'Hoạt động',
+            delete: <DeleteOutlined />
         },
         {
             key: '2',
@@ -24,6 +30,7 @@ const FeeManagement = () => {
             cycle: 'Hàng tháng',
             paymentMethod: 'Online',
             status: 'Không hoạt động',
+            delete: <DeleteOutlined />
         },
         {
             key: '3',
@@ -34,6 +41,7 @@ const FeeManagement = () => {
             cycle: 'Hàng tháng',
             paymentMethod: 'Online',
             status: 'Hoạt động',
+            delete: <DeleteOutlined />
         },
         {
             key: '4',
@@ -44,6 +52,7 @@ const FeeManagement = () => {
             cycle: 'Hàng tháng',
             paymentMethod: 'Online',
             status: 'Hoạt động',
+            delete: <DeleteOutlined />
         },
         {
             key: '5',
@@ -54,6 +63,40 @@ const FeeManagement = () => {
             cycle: 'Hàng tháng',
             paymentMethod: 'Online',
             status: 'Không hoạt động',
+            delete: <DeleteOutlined />
+        },
+        {
+            key: '6',
+            name: 'Phí giao dịch',
+            target: 'Khách hàng',
+            value: '10%',
+            type: 'Cố định',
+            cycle: 'Hàng tháng',
+            paymentMethod: 'Offline',
+            status: 'Hoạt động',
+            delete: <DeleteOutlined />
+        },
+        {
+            key: '7',
+            name: 'Phí giao dịch',
+            target: 'Khách hàng',
+            value: '10%',
+            type: 'Cố định',
+            cycle: 'Hàng tháng',
+            paymentMethod: 'Online',
+            status: 'Không hoạt động',
+            delete: <DeleteOutlined />
+        },
+        {
+            key: '8',
+            name: 'Phí giao dịch',
+            target: 'Khách hàng',
+            value: '10%',
+            type: 'Cố định',
+            cycle: 'Hàng tháng',
+            paymentMethod: 'Online',
+            status: 'Hoạt động',
+            delete: <DeleteOutlined />
         }
     ];
 
@@ -93,11 +136,16 @@ const FeeManagement = () => {
             key: 'status',
             dataIndex: 'status',
             render: (status) => (
-                <Tag color={status === 'Hoạt động' ? '#5AB98D' : '#F3BF1B'}>
-                    {status.toUpperCase()}
+                <Tag style={{ width: "8rem", textAlign: 'center' }} color={status === 'Hoạt động' ? '#5AB98D' : '#F3BF1B'}>
+                    {status}
                 </Tag>
             ),
         },
+        {
+            title: '+',
+            dataIndex: 'delete',
+            key: 'delete',
+        }
     ];
 
     const rowSelection = {
@@ -108,22 +156,29 @@ const FeeManagement = () => {
     };
 
     return (
-        <main className="p-6 bg-white">
-            <div className="flex justify-between items-center mb-6">
-                <div className="font-bold text-xl leading-10 uppercase">DANH SÁCH PHÍ</div>
-                <input
-                    type="text"
+        <main className="content-container-feelist">
+            <div className="search-title-feelist-container">
+                <span className="title-feelist">DANH SÁCH PHÍ</span>
+                <NavLink to="/dashboard/create-fee" >
+                    <Button className='add-fee'>Tạo phí +</Button>
+                </NavLink>
+                <Search
                     placeholder="Tìm kiếm"
-                    className="border p-2 rounded-lg w-1/3"
+                    allowClear
+                    size="large"
+                    onSearch={onSearch}
+                    style={{ width: 350, padding: "16px" }}
                 />
-                <Button type="primary">Tạo phí</Button>
             </div>
-            <Table
-                rowSelection={rowSelection}
-                columns={columns}
-                dataSource={data}
-                pagination={{ pageSize: 10 }}
-            />
+            <div className='table-feelist-container'>
+                <Table
+                    rowSelection={rowSelection}
+                    columns={columns}
+                    dataSource={data}
+                    pagination={{ pageSize: 10 }}
+                />
+            </div>
+            <Outlet />
         </main>
     );
 };

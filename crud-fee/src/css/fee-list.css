@@ -1,0 +1,31 @@
+.content-container-feelist {
+    display: block;
+    width: 100%;
+}
+
+.search-title-feelist-container {
+    position: relative;
+    display: flex;  
+    justify-content: space-around;
+    align-items: center;
+}   
+
+.title-feelist {
+    font-size: 30px;
+    font-weight: 500;
+    padding: 0 16px;
+}
+
+.add-fee {
+    background: #2C3D94; 
+    color: #fff;
+    padding: 0 40px;
+}
+
+.table-feelist-container {
+    text-align: center;
+    padding: 0 16px;
+    font-size: 0.875rem;
+    line-height: 1.5715;
+}
+
