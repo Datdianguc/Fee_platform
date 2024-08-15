@@ -45,6 +45,7 @@ export default function CreateFee() {
         }
     };
 
+
     return (
         <>
             <Form
@@ -59,7 +60,16 @@ export default function CreateFee() {
                 onFinish={handleSubmit}>
                 <span className="title-feelist">TẠO PHÍ</span>
 
-                <Form.Item style={{ paddingTop: 20 }}>
+                <Form.Item
+                    style={{ paddingTop: 20 }}
+                    name="feeRadio"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Thiếu thông tin!"
+                        },
+                    ]}
+                >
                     <Radio.Group
                         onChange={(e) => setRadio(e.target.value)}
                         value={radio}>
@@ -86,13 +96,14 @@ export default function CreateFee() {
                             onChange={(e) => setFeeName(e.target.value)} />
                     </Form.Item>
 
-                <Form.Item
+                    <Form.Item
                         label="Mã phí"
                         name="feeCode"
                         style={{ width: "100%" }}
+                        initialValue={Math.floor(100000 + Math.random() * 900000)}
                     // todo: fetch key from database -> generate random fee code
                     >
-                        <Input disabled />
+                        <Input prefix="FE" disabled />
                     </Form.Item>
                 </Form.Item>
 
@@ -131,10 +142,9 @@ export default function CreateFee() {
                     label="Trạng thái hoạt động"
                     name="Switch"
                     valuePropName="checked" >
-                    <Switch 
-                    style={{ color: "#1bf740" }}
-                    checked={activeStatus}
-                    onChange={(checked) => setActiveStatus(checked)}
+                    <Switch
+                        checked={activeStatus}
+                        onChange={(checked) => setActiveStatus(checked)}
                     />
                 </Form.Item>
 
@@ -188,7 +198,6 @@ export default function CreateFee() {
                         }
                     ]}>
                     <InputNumber
-                        type="number"
                         value={feeValue}
                         onChange={(value) => setFeeValue(value)}
                         style={{ width: "100%" }}

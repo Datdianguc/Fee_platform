@@ -4,10 +4,16 @@ import "../css/fee-list.css"
 import { DeleteOutlined } from '@ant-design/icons';
 import { NavLink, Outlet } from 'react-router-dom';
 
-
 const { Search } = Input;
+
 const FeeManagement = () => {
+    const [list, setList] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
+    const handleDelete = (item) => {
+        const newsId = item.id;
+        setList(prevState => prevState.filter(i => i.id !== newsId));
+    };
     const onSearch = (value, _e, info) => console.log(info?.source, value);
     const data = [
         {
@@ -19,7 +25,7 @@ const FeeManagement = () => {
             cycle: 'Hàng tháng',
             paymentMethod: 'Online',
             status: 'Hoạt động',
-            delete: <DeleteOutlined />
+            delete: <button className='delete' onClick={() => handleDelete(list)}><DeleteOutlined /></button>
         },
         {
             key: '2',
@@ -175,7 +181,7 @@ const FeeManagement = () => {
                     rowSelection={rowSelection}
                     columns={columns}
                     dataSource={data}
-                    pagination={{ pageSize: 10 }}
+                    pagination={{ pageSize: 5 }}
                 />
             </div>
             <Outlet />

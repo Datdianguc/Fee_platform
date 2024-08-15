@@ -29,3 +29,7 @@
     line-height: 1.5715;
 }
 
+.delete {
+    cursor: pointer;
+}
+

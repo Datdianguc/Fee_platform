@@ -1,0 +1,12 @@
+.notification-icon {
+    display: flex;
+    gap: 1.875rem;
+    position: relative;
+    margin-left: auto;
+}
+
+.badge {
+    font-size: 20px;
+    color: white;
+    padding-top: 23px;
+}
