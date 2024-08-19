@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Table, Tag, Input, Button } from 'antd';
 import "../css/fee-list.css"
-import { DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { NavLink, Outlet } from 'react-router-dom';
 
 const { Search } = Input;
@@ -148,7 +148,7 @@ const FeeManagement = () => {
             ),
         },
         {
-            title: '+',
+            title: <PlusOutlined />,
             dataIndex: 'delete',
             key: 'delete',
         }
@@ -166,7 +166,7 @@ const FeeManagement = () => {
             <div className="search-title-feelist-container">
                 <span className="title-feelist">DANH SÁCH PHÍ</span>
                 <NavLink to="/dashboard/create-fee" >
-                    <Button className='add-fee'>Tạo phí +</Button>
+                    <Button className='add-fee'>Tạo phí<PlusOutlined /></Button>
                 </NavLink>
                 <Search
                     placeholder="Tìm kiếm"
