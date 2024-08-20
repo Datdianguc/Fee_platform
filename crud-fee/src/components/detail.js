@@ -31,7 +31,7 @@ export default function Detail() {
                         <Input value={data.feeName} disabled />
                     </Form.Item>
                     <Form.Item label="Mã phí">
-                        <Input value="FE123456" disabled />
+                        <Input value={data.feeCode} disabled />
                     </Form.Item>
                     <Form.Item label="Phương thức thanh toán">
                         <Input value={data.paycheck} disabled />

@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import {
-  createBrowserRouter, createRoutesFromElements, RouterProvider, Route, Router
+  createBrowserRouter, createRoutesFromElements, RouterProvider, Route
 } from "react-router-dom";
 import Login from "./components/login";
 import ForgotPassword from "./components/forgot-password";
