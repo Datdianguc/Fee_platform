@@ -11,8 +11,8 @@ import {
 } from '@ant-design/icons';
 import { Breadcrumb, Layout, Menu, Badge, Avatar, Dropdown, Space } from 'antd';
 import { NavLink, Link } from "react-router-dom";
-import FeeManagement from "./fee-list";
 import "../css/dashboard.css"
+import CreateFee from "./create-fee";
 
 const { Header, Content, Sider } = Layout;
 
@@ -40,7 +40,7 @@ const items = [
     }
 ]
 
-export default function Dashboard() {
+export default function DashboardCreate() {
     const [collapsed, setCollapsed] = useState(false);
     return (
         <Layout style={{ minHeight: "100vh" }}>
@@ -110,7 +110,7 @@ export default function Dashboard() {
                             </Menu.SubMenu>
                         </Menu>
                     </Sider>
-                    <FeeManagement />
+                    <CreateFee />
                 </Layout>
             </Content>
         </Layout>

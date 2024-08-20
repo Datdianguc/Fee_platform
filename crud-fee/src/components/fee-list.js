@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Table, Tag, Input, Button } from 'antd';
 import "../css/fee-list.css"
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 const { Search } = Input;
 
@@ -184,7 +184,6 @@ const FeeManagement = () => {
                     pagination={{ pageSize: 5 }}
                 />
             </div>
-            <Outlet />
         </main>
     );
 };

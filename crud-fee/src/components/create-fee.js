@@ -85,8 +85,8 @@ export default function CreateFee() {
             <Form
                 form={form}
                 variant="outlined"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 14 }}
+                labelCol={{ span: 10 }}
+                wrapperCol={{ span: 20 }}
                 layout="vertical"
                 style={{
                     padding: "0px 36px",
@@ -98,6 +98,8 @@ export default function CreateFee() {
                         currency: 'VND'
                     }
                 }}
+                scrollToFirstError={true}
+                size="large"
                 onFinish={handleSubmit}
                 onFinishFailed={onFinishFailed}
             >
