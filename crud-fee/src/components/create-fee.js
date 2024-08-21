@@ -12,12 +12,13 @@ import {
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import PriceInput from "./price-input";
+const randomNumber = Math.floor(100000 + Math.random() * 900000);
 
 export default function CreateFee() {
 
     const [radio, setRadio] = useState(null);
     const [feeName, setFeeName] = useState('');
-    const [feeCode, setFeeCode] = useState('');
+    const [feeCode, setFeeCode] = useState(randomNumber);
     const [paycheck, setPaycheck] = useState('');
     const [textArea, setTextArea] = useState('');
     const [feeType, setFeeType] = useState(null);
@@ -28,10 +29,9 @@ export default function CreateFee() {
     const [form] = Form.useForm();
     const navigate = useNavigate();
     const { Option } = Select;
-
     const handleSubmit = async () => {
         try {
-            const res = await axios.post("http://localhost:8081/api/fees/create",
+            const res = await axios.post("192.168.1.15/api/fees/create",
                 {
                     radio,
                     feeName,
@@ -73,13 +73,6 @@ export default function CreateFee() {
         setPrice(newPrice);
     }
 
-      const checkPrice = (_, value) => {
-        if (value.number > 0) {
-          return Promise.resolve();
-        }
-        return Promise.reject(new Error('Price must be greater than zero!'));
-      };
-
     return (
         <>
             <Form
@@ -90,7 +83,7 @@ export default function CreateFee() {
                 layout="vertical"
                 style={{
                     padding: "0px 36px",
-                    maxWidth: 1200,
+                    width: 1500
                 }}
                 initialValues={{
                     price: {
@@ -103,7 +96,7 @@ export default function CreateFee() {
                 onFinish={handleSubmit}
                 onFinishFailed={onFinishFailed}
             >
-                <span className="title-feelist">TẠO PHÍ</span>
+                <span className="title-feelist" style={{padding: 500}}>TẠO PHÍ</span>
                 <Collapse bordered={false} defaultActiveKey={['1', '2', '3']}>
                     <Collapse.Panel header="Đối tượng áp dụng" key="1">
                         <Form.Item
@@ -141,14 +134,14 @@ export default function CreateFee() {
                                     placeholder="Nhập tên phí"
                                     maxLength={50}
                                     value={feeName}
-                                    onChange={(value) => setFeeName(value)} />
+                                    onChange={(e) => setFeeName(e.target.value)} />
                             </Form.Item>
 
                             <Form.Item
                                 label="Mã phí"
                                 name="feeCode"
                                 style={{ width: "100%" }}
-                                initialValue={Math.floor(100000 + Math.random() * 900000)}
+                                initialValue={randomNumber}
                             >
                                 <Input
                                     value={feeCode}
@@ -249,7 +242,6 @@ export default function CreateFee() {
                                 {
                                     required: true,
                                     message: "Thiếu thông tin!",
-                                    validator: checkPrice,
                                 },
                             ]}>
                             <PriceInput value={price} onChange={onPriceChange} />

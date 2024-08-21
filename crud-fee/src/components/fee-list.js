@@ -1,146 +1,84 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table, Tag, Input, Button } from 'antd';
 import "../css/fee-list.css"
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { NavLink } from 'react-router-dom';
+import axios from 'axios';
 
 const { Search } = Input;
 
-const FeeManagement = () => {
-    const [list, setList] = useState([]);
+const FeeManagement = (props) => {
+    const { radio, feeName, paycheck, activeStatus, price, feeCatergories } = props;
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [data, setData] = useState();
+    const [loading, setLoading] = useState(false);
+    const [tableParams, setTableParams] = useState({
+        pagination: {
+            current: 1,
+            pageSize: 10,
+        },
+    });
 
-    const handleDelete = (item) => {
-        const newsId = item.id;
-        setList(prevState => prevState.filter(i => i.id !== newsId));
-    };
-    const onSearch = (value, _e, info) => console.log(info?.source, value);
-    const data = [
-        {
-            key: '1',
-            name: 'Phí vận chuyển',
-            target: 'Nhà cung cấp',
-            value: '10%',
-            type: 'Cố định',
-            cycle: 'Hàng tháng',
-            paymentMethod: 'Online',
-            status: 'Hoạt động',
-            delete: <button className='delete' onClick={() => handleDelete(list)}><DeleteOutlined /></button>
-        },
-        {
-            key: '2',
-            name: 'Phí vận chuyển',
-            target: 'Khách hàng',
-            value: '10%',
-            type: 'Cố định',
-            cycle: 'Hàng tháng',
-            paymentMethod: 'Online',
-            status: 'Không hoạt động',
-            delete: <DeleteOutlined />
-        },
-        {
-            key: '3',
-            name: 'Phí giao dịch',
-            target: 'Khách hàng',
-            value: '10%',
-            type: 'Cố định',
-            cycle: 'Hàng tháng',
-            paymentMethod: 'Online',
-            status: 'Hoạt động',
-            delete: <DeleteOutlined />
-        },
-        {
-            key: '4',
-            name: 'Phí giao dịch',
-            target: 'Khách hàng',
-            value: '10%',
-            type: 'Cố định',
-            cycle: 'Hàng tháng',
-            paymentMethod: 'Online',
-            status: 'Hoạt động',
-            delete: <DeleteOutlined />
-        },
-        {
-            key: '5',
-            name: 'Phí giao dịch',
-            target: 'Khách hàng',
-            value: '10%',
-            type: 'Cố định',
-            cycle: 'Hàng tháng',
-            paymentMethod: 'Online',
-            status: 'Không hoạt động',
-            delete: <DeleteOutlined />
-        },
-        {
-            key: '6',
-            name: 'Phí giao dịch',
-            target: 'Khách hàng',
-            value: '10%',
-            type: 'Cố định',
-            cycle: 'Hàng tháng',
-            paymentMethod: 'Offline',
-            status: 'Hoạt động',
-            delete: <DeleteOutlined />
-        },
-        {
-            key: '7',
-            name: 'Phí giao dịch',
-            target: 'Khách hàng',
-            value: '10%',
-            type: 'Cố định',
-            cycle: 'Hàng tháng',
-            paymentMethod: 'Online',
-            status: 'Không hoạt động',
-            delete: <DeleteOutlined />
-        },
-        {
-            key: '8',
-            name: 'Phí giao dịch',
-            target: 'Khách hàng',
-            value: '10%',
-            type: 'Cố định',
-            cycle: 'Hàng tháng',
-            paymentMethod: 'Online',
-            status: 'Hoạt động',
-            delete: <DeleteOutlined />
+    const handleDelete = async (item) => {
+        try {
+            await axios.delete(`http://192.168.1.15:8081/api/fees/${item.id}`)
+            setData(prevState => prevState.filter(i => i.id !== item.id));
+        } catch(error) {
+            console.log("Không thể xóa dữ liệu:", error)
         }
-    ];
+    };
+
+    const onSearch = (value, _e, info) => console.log(info?.source, value);
+
 
     const columns = [
         {
             title: 'Tên phí',
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: feeName,
         },
         {
             title: 'Đối tượng áp dụng',
-            dataIndex: 'target',
-            key: 'target',
+            dataIndex: radio,
         },
         {
             title: 'Giá trị phí',
-            dataIndex: 'value',
-            key: 'value',
+            dataIndex: price
         },
         {
             title: 'Loại phí',
-            dataIndex: 'type',
-            key: 'type',
+            dataIndex: feeCatergories,
+            filter: [
+                {
+                    text: 'Phí cố định',
+                    value: 'Phí cố định'
+                },
+                {
+                    text: 'Phí định kỳ',
+                    value: 'Phí định kỳ',
+                },
+                {
+                    text: 'Phân tầng',
+                    value: 'Phân tầng',
+                },
+                {
+                    text: 'Phân chia doanh thu',
+                    value: 'Phân chia doanh thu',
+                }
+            ]
+
         },
         {
             title: 'Chu kỳ áp dụng',
             dataIndex: 'cycle',
-            key: 'cycle',
         },
         {
             title: 'Phương thức thanh toán',
-            dataIndex: 'paymentMethod',
-            key: 'paymentMethod',
+            dataIndex: paycheck,
+
         },
         {
             title: 'Trạng thái hoạt động',
-            key: 'status',
-            dataIndex: 'status',
+            dataIndex: activeStatus,
             render: (status) => (
                 <Tag style={{ width: "8rem", textAlign: 'center' }} color={status === 'Hoạt động' ? '#5AB98D' : '#F3BF1B'}>
                     {status}
@@ -150,7 +88,7 @@ const FeeManagement = () => {
         {
             title: <PlusOutlined />,
             dataIndex: 'delete',
-            key: 'delete',
+            delete: <button className='delete' onClick={() => handleDelete(data)}><DeleteOutlined /></button>
         }
     ];
 
@@ -160,6 +98,33 @@ const FeeManagement = () => {
             setSelectedRowKeys(selectedRowKeys);
         },
     };
+    const fetchData = async () => {
+        try {
+            setLoading(true);
+            const res = await axios.get("http://192.168.1.15:8081/api/fees");
+            if (res.data.status) {
+                setData(res.data.data);
+                setTableParams({
+                    ...tableParams,
+                    pagination: {
+                        ...tableParams.pagination,
+                        total: res.data.totalCount,
+                    },
+                });
+            } else {
+                console.log("Lấy thông tin thất bại: ", res.data.message);
+            }
+        } catch (error) {
+            console.error("Không thể lấy thông tin:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+    useEffect(() => {
+        fetchData();
+    })
 
     return (
         <main className="content-container-feelist">
@@ -181,7 +146,8 @@ const FeeManagement = () => {
                     rowSelection={rowSelection}
                     columns={columns}
                     dataSource={data}
-                    pagination={{ pageSize: 5 }}
+                    pagination={tableParams.pagination}
+                    loading={loading}
                 />
             </div>
         </main>

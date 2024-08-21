@@ -44,7 +44,7 @@ export default function PriceInput(props) {
         type="text"
         value={value.number || number}
         onChange={onNumberChange}
-        style={{ width: 520 }}
+        style={{ width: 795 }}
       />
       <Select
         value={value.currency || currency}
