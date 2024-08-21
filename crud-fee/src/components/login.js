@@ -10,7 +10,7 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-     const res = await axios.post("192.168.1.15/api/users/login", {username: email, password });
+     const res = await axios.post("https://192.168.1.15/api/users/login", {username: email, password });
      if (res.data.status) {
       navigate("/dashboard")
      }
