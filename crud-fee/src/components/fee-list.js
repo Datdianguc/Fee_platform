@@ -21,7 +21,7 @@ const FeeManagement = (props) => {
 
     const handleDelete = async (item) => {
         try {
-            await axios.delete(`http://192.168.1.15:8081/api/fees/${item.id}`)
+            await axios.delete(`http://192.168.1.7:8081/api/fees/${item.id}`)
             setData(prevState => prevState.filter(i => i.id !== item.id));
         } catch(error) {
             console.log("Không thể xóa dữ liệu:", error)

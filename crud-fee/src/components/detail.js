@@ -12,11 +12,11 @@ export default function Detail() {
             labelCol={{ span: 8 }}
             wrapperCol={{ span: 16 }}
             layout="vertical"
-            style={{ padding: "0px 36px", maxWidth: 1200 }}
+            style={{ padding: "0px 36px", width: 1200 }}
         >
-            <h2>CHI TIẾT PHÍ</h2>
+            <h2 style={{padding: "20px 100px", }}>CHI TIẾT PHÍ</h2>
             
-            <Collapse defaultActiveKey={['1', '2', '3']}>
+            <Collapse bordered={false} defaultActiveKey={['1', '2', '3']}>
                 <Collapse.Panel header="Đối tượng áp dụng" key="1">
                     <Form.Item label="Đối tượng áp dụng">
                         <Radio.Group value={data.radio}>

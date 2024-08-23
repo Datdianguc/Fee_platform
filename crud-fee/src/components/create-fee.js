@@ -31,7 +31,7 @@ export default function CreateFee() {
     const { Option } = Select;
     const handleSubmit = async () => {
         try {
-            const res = await axios.post("192.168.1.15/api/fees/create",
+            const res = await axios.post("http://192.168.1.7:8081/api/fees/create",
                 {
                     radio,
                     feeName,
