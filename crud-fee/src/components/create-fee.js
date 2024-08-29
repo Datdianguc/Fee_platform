@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Button,
     Form,
@@ -9,8 +9,8 @@ import {
     Collapse,
     message
 } from "antd";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useNavigate, useLocation } from "react-router-dom";
+import api from "./baseURL";
 import PriceInput from "./price-input";
 const randomNumber = Math.floor(100000 + Math.random() * 900000);
 
@@ -19,7 +19,7 @@ export default function CreateFee() {
     const [radio, setRadio] = useState(null);
     const [feeName, setFeeName] = useState('');
     const [feeCode, setFeeCode] = useState(randomNumber);
-    const [paycheck, setPaycheck] = useState('');
+    const [paycheck, setPaycheck] = useState(null);
     const [textArea, setTextArea] = useState('');
     const [feeType, setFeeType] = useState(null);
     const [feeCategories, setFeeCategories] = useState(null);
@@ -27,41 +27,45 @@ export default function CreateFee() {
     const [price, setPrice] = useState({ number: 0, currency: 'VND' });
 
     const [form] = Form.useForm();
+    const {state} = useLocation();
     const navigate = useNavigate();
     const { Option } = Select;
+
+    useEffect(() => {
+        if (state) {
+            setRadio(state.radio);
+            setFeeName(state.feeName);
+            setFeeCode(state.feeCode);
+            setPaycheck(state.paycheck);
+            setTextArea(state.textArea);
+            setFeeType(state.feeType);
+            setFeeCategories(state.feeCategories);
+            setActiveStatus(state.activeStatus);
+            setPrice(state.price);
+        }
+    }, [state])
+
     const handleSubmit = async () => {
         try {
-            const res = await axios.post("http://192.168.1.7:8081/api/fees/create",
-                {
-                    radio,
-                    feeName,
-                    paycheck,
-                    textArea,
-                    feeCode,
-                    feeType,
-                    feeCategories,
-                    activeStatus,
-                    price
-                }
-            )
-            if (res.data.status) {
-                navigate("/dashboard/detail", {
-                    state: {
-                        radio,
-                        feeName,
-                        paycheck,
-                        textArea,
-                        feeCode,
-                        feeType,
-                        feeCategories,
-                        activeStatus,
-                        price
-                    }
-                })
+            const payload = {
+                radio,
+                feeName,
+                paycheck,
+                textArea,
+                feeCode,
+                feeType,
+                feeCategories,
+                activeStatus,
+                price
+            };
+            if (state) {
+                await api.put(`/fees/update/${state.key}`, payload);
+            } else {
+                await api.post("/fees/create", payload);
             }
-        }
-        catch (e) {
-            console.log("Có lỗi không xác định đã xảy ra", e)
+            navigate("/dashboard/detail");
+        } catch (e) {
+            console.log("An error occurred:", e);
         }
     };
 
@@ -112,8 +116,8 @@ export default function CreateFee() {
                             <Radio.Group
                                 onChange={(e) => setRadio(e.target.value)}
                                 value={radio}>
-                                <Radio value="Nhà cung cấp dịch vụ">Nhà cung cấp dịch vụ</Radio>
-                                <Radio value="Khách hàng">Khách hàng</Radio>
+                                <Radio value={1}>Nhà cung cấp dịch vụ</Radio>
+                                <Radio value={2}>Khách hàng</Radio>
                             </Radio.Group>
                         </Form.Item>
                     </Collapse.Panel>
@@ -166,9 +170,9 @@ export default function CreateFee() {
                                 value={paycheck}
                                 onChange={(value) => setPaycheck(value)}
                                 placeholder="Chọn phương thức thanh toán">
-                                <Option value="Chuyển khoản">Chuyển khoản</Option>
-                                <Option value="Thanh toán qua thẻ tín dụng">Thanh toán qua thẻ tín dụng</Option>
-                                <Option value="Ví điện tử">Ví điện tử</Option>
+                                <Option value={1}>Chuyển khoản</Option>
+                                <Option value={2}>Thanh toán qua thẻ tín dụng</Option>
+                                <Option value={3}>Ví điện tử</Option>
                             </Select>
                         </Form.Item>
 
@@ -209,8 +213,8 @@ export default function CreateFee() {
                                 value={feeType}
                                 onChange={(value) => setFeeType(value)}
                                 placeholder="Phí cố định">
-                                <Option value="Phí cố định">Phí cố định</Option>
-                                <Option value="Phí tùy biến">Phí tùy biến</Option>
+                                <Option value={1}>Phí cố định</Option>
+                                <Option value={2}>Phí tùy biến</Option>
                             </Select>
                         </Form.Item>
 
@@ -228,10 +232,10 @@ export default function CreateFee() {
                                 value={feeCategories}
                                 onChange={(value) => setFeeCategories(value)}
                                 placeholder="Chọn loại phí">
-                                <Option value="Phí cố định">Phí cố định</Option>
-                                <Option value="Phí định kỳ">Phí định kỳ</Option>
-                                <Option value="Phân tầng">Phân tầng</Option>
-                                <Option value="Phân chia doanh thu">Phân chia doanh thu</Option>
+                                <Option value={1}>Phí cố định</Option>
+                                <Option value={2}>Phí định kỳ</Option>
+                                <Option value={3}>Phân tầng</Option>
+                                <Option value={4}>Phân chia doanh thu</Option>
                             </Select>
                         </Form.Item>
 
@@ -249,7 +253,7 @@ export default function CreateFee() {
 
                         <Form.Item>
                             <Button type="primary" htmlType="submit">
-                                Submit
+                                {state ? 'Update' : 'Submit'}
                             </Button>
                         </Form.Item>
                     </Collapse.Panel>

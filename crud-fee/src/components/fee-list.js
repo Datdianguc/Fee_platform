@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Tag, Input, Button } from 'antd';
 import "../css/fee-list.css"
-import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
-import { NavLink } from 'react-router-dom';
-import axios from 'axios';
+import { DeleteOutlined, PlusOutlined, EditOutlined } from '@ant-design/icons';
+import { NavLink, useNavigate } from 'react-router-dom';
+import api from './baseURL';
 
 const { Search } = Input;
 
-const FeeManagement = (props) => {
-    const { radio, feeName, paycheck, activeStatus, price, feeCatergories } = props;
+const FeeManagement = () => {
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-    const [data, setData] = useState();
+    const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [tableParams, setTableParams] = useState({
         pagination: {
@@ -18,35 +17,79 @@ const FeeManagement = (props) => {
             pageSize: 10,
         },
     });
+    const navigate = useNavigate();
 
     const handleDelete = async (item) => {
         try {
-            await axios.delete(`http://192.168.1.7:8081/api/fees/${item.id}`)
-            setData(prevState => prevState.filter(i => i.id !== item.id));
-        } catch(error) {
+            await api.delete(`/fees/delete/${item.id}`)
+            setData(prevData => prevData.filter(i => i.id !== item.id));
+        } catch (error) {
             console.log("Không thể xóa dữ liệu:", error)
         }
     };
 
-    const onSearch = (value, _e, info) => console.log(info?.source, value);
+    const fetchData = async () => {
+        try {
+            setLoading(true);
+            const res = await api.get("/fees/");
+            if (res.status === 200) {
+                const mappedItem = res.data.map((item) => ({
+                    key: item.id, // Ensure unique key for each row
+                    feeName: item.feeName,
+                    radio: item.radio,
+                    price: {
+                        number: item.price.number,
+                        currency: item.price.currency,
+                    },
+                    feeCategories: item.feeCategories,
+                    cycle: item.cycle,
+                    paycheck: item.paycheck,
+                    activeStatus: item.activeStatus,
+                }));
+                setData(mappedItem);
+                setTableParams({
+                    ...tableParams,
+                    pagination: {
+                        ...tableParams.pagination,
+                        total: res.data.totalCount,
+                    },
+                });
+            } else {
+                console.log("Lấy thông tin thất bại: ", res.data.message);
+            }
+        } catch (error) {
+            console.error("Không thể lấy thông tin:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const handleUpdate = (record) => {
+        navigate(`/dashboard/create-fee`, {state: {...record} })
+    };
 
     const columns = [
         {
             title: 'Tên phí',
-            dataIndex: feeName,
+            dataIndex: 'feeName',
         },
         {
             title: 'Đối tượng áp dụng',
-            dataIndex: radio,
+            dataIndex: 'radio',
         },
         {
             title: 'Giá trị phí',
-            dataIndex: price
+            dataIndex: 'price',
+            render: (price) => `${price.number} ${price.currency}`
         },
         {
             title: 'Loại phí',
-            dataIndex: feeCatergories,
+            dataIndex: 'feeCatergories',
             filter: [
                 {
                     text: 'Phí cố định',
@@ -73,12 +116,12 @@ const FeeManagement = (props) => {
         },
         {
             title: 'Phương thức thanh toán',
-            dataIndex: paycheck,
+            dataIndex: 'paycheck',
 
         },
         {
             title: 'Trạng thái hoạt động',
-            dataIndex: activeStatus,
+            dataIndex: 'activeStatus',
             render: (status) => (
                 <Tag style={{ width: "8rem", textAlign: 'center' }} color={status === 'Hoạt động' ? '#5AB98D' : '#F3BF1B'}>
                     {status}
@@ -86,9 +129,14 @@ const FeeManagement = (props) => {
             ),
         },
         {
-            title: <PlusOutlined />,
-            dataIndex: 'delete',
-            delete: <button className='delete' onClick={() => handleDelete(data)}><DeleteOutlined /></button>
+            title: 'Actions',
+            dataIndex: 'actions',
+            render: (_, record) => (
+                <>
+                    <Button icon={<EditOutlined />} onClick={() => handleUpdate(record)} />
+                    <Button icon={<DeleteOutlined />} onClick={() => handleDelete(record)} />
+                </>
+            ),
         }
     ];
 
@@ -98,33 +146,6 @@ const FeeManagement = (props) => {
             setSelectedRowKeys(selectedRowKeys);
         },
     };
-    const fetchData = async () => {
-        try {
-            setLoading(true);
-            const res = await axios.get("http://192.168.1.15:8081/api/fees");
-            if (res.data.status) {
-                setData(res.data.data);
-                setTableParams({
-                    ...tableParams,
-                    pagination: {
-                        ...tableParams.pagination,
-                        total: res.data.totalCount,
-                    },
-                });
-            } else {
-                console.log("Lấy thông tin thất bại: ", res.data.message);
-            }
-        } catch (error) {
-            console.error("Không thể lấy thông tin:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-
-    useEffect(() => {
-        fetchData();
-    })
 
     return (
         <main className="content-container-feelist">
@@ -137,7 +158,7 @@ const FeeManagement = (props) => {
                     placeholder="Tìm kiếm"
                     allowClear
                     size="large"
-                    onSearch={onSearch}
+                    onSearch={value => console.log(value)}
                     style={{ width: 350, padding: "16px" }}
                 />
             </div>
@@ -148,10 +169,10 @@ const FeeManagement = (props) => {
                     dataSource={data}
                     pagination={tableParams.pagination}
                     loading={loading}
+                    onChange={(pagination) => setTableParams({ pagination })}
                 />
             </div>
-        </main>
+        </main >
     );
 };
-
 export default FeeManagement;

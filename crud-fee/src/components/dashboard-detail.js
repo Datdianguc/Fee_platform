@@ -46,7 +46,7 @@ export default function DashboardDetail() {
         <Layout style={{ minHeight: "100vh" }}>
             <Header style={{ display: 'flex', alignItems: 'center', background: '#2C3D94' }} >
                 <NavLink to="/dashboard">
-                    <img src="https://staging.onesme.vn/static/media/oneSME_Logo.27bbb32f.svg"
+                    <img src="https://staging.onesme.vn/react/static/media/oneSME_Logo.27bbb32f.svg"
                         className="oneSME-logo"
                         alt="oneSME-logo" />
                 </NavLink>

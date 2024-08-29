@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../css/login.css";
 import { NavLink, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "./baseURL";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -10,7 +10,7 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-     const res = await axios.post("http://192.168.1.7:8081/api/users/login", {username: email, password });
+     const res = await api.post("/users/login", {username: email, password });
      if (res.data.status) {
       navigate("/dashboard")
      }
