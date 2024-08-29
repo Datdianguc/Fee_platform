@@ -8,6 +8,7 @@ import api from './baseURL';
 const { Search } = Input;
 
 const FeeManagement = () => {
+    const navigate = useNavigate();
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -17,30 +18,18 @@ const FeeManagement = () => {
             pageSize: 10,
         },
     });
-    const navigate = useNavigate();
-
-    const handleDelete = async (item) => {
-        try {
-            await api.delete(`/fees/delete/${item.id}`)
-            setData(prevData => prevData.filter(i => i.id !== item.id));
-        } catch (error) {
-            console.log("Không thể xóa dữ liệu:", error)
-        }
-    };
 
     const fetchData = async () => {
+        setLoading(true);
         try {
-            setLoading(true);
             const res = await api.get("/fees/");
             if (res.status === 200) {
                 const mappedItem = res.data.map((item) => ({
-                    key: item.id, // Ensure unique key for each row
+                    key: item.id, 
+                    id: item.id,
                     feeName: item.feeName,
                     radio: item.radio,
-                    price: {
-                        number: item.price.number,
-                        currency: item.price.currency,
-                    },
+                    price: item.price,
                     feeCategories: item.feeCategories,
                     cycle: item.cycle,
                     paycheck: item.paycheck,
@@ -64,13 +53,21 @@ const FeeManagement = () => {
         }
     };
 
-
     useEffect(() => {
         fetchData();
     }, []);
 
-    const handleUpdate = (record) => {
-        navigate(`/dashboard/create-fee`, {state: {...record} })
+    const handleDelete = async (item) => {
+        try {
+            await api.delete(`/fees/delete/${item.id}`)
+            setData(prevData => prevData.filter(i => i.id !== item.id));
+        } catch (error) {
+            console.log("Không thể xóa dữ liệu:", error)
+        }
+    };
+
+    const handleUpdate = (item) => {
+        navigate(`/dashboard/create-fee`, {state: {...item} })
     };
 
     const columns = [
@@ -131,10 +128,10 @@ const FeeManagement = () => {
         {
             title: 'Actions',
             dataIndex: 'actions',
-            render: (_, record) => (
+            render: (_, item) => (
                 <>
-                    <Button icon={<EditOutlined />} onClick={() => handleUpdate(record)} />
-                    <Button icon={<DeleteOutlined />} onClick={() => handleDelete(record)} />
+                    <Button icon={<EditOutlined />} onClick={() => handleUpdate(item)} />
+                    <Button icon={<DeleteOutlined />} onClick={() => handleDelete(item)} />
                 </>
             ),
         }
