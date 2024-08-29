@@ -40,6 +40,37 @@ const items = [
     }
 ]
 
+const getMenuItems = (label, key, icon, children) => {
+    return {
+        label, key, icon, children
+    };
+}
+
+const MenuItems = [
+    getMenuItems('Tài khoản', 'sub1', <UserOutlined />, [
+        getMenuItems('Quản trị viên', '1'),
+        getMenuItems('Nhà cung cấp', '2'),
+        getMenuItems('Khách hàng', '3'),
+        getMenuItems('Quyền chủ thể dữ liệu', '4')
+    ]),
+    getMenuItems('Phân quyền', 'sub2', <UserSwitchOutlined />, [
+        getMenuItems('Quản trị viên', '5'),
+        getMenuItems('Nhà cung cấp', '6'),
+        getMenuItems('Khách hàng', '7'),
+    ]),
+    getMenuItems('Khách hàng', 'sub3', <UserAddOutlined />, [
+        getMenuItems('Doanh nghiệp', '8'),
+        getMenuItems('Cá nhân', '9'),
+        getMenuItems('Hộ kinh doanh', '10'),
+        getMenuItems('Nhóm khách hàng', '11'),
+    ]),
+    getMenuItems('Phân quyền', 'sub4', <AppstoreOutlined />, [
+        getMenuItems('Hoa hồng', '12'),
+        getMenuItems('Thanh toán hoa hồng', '13'),
+        getMenuItems('Hoa hồng', '14'),
+    ])
+]
+
 export default function Dashboard() {
     const [collapsed, setCollapsed] = useState(false);
     return (
@@ -82,33 +113,11 @@ export default function Dashboard() {
                         <Menu
                             theme="dark"
                             mode="inline"
+                            items={MenuItems}
                             defaultSelectedKeys={['14']}
                             defaultOpenKeys={['sub4']}
                             style={{ height: '100%', minHeight: "100vh" }}
-                        >
-                            <Menu.SubMenu key={"sub1"} icon={<UserOutlined />} title="Tài khoản">
-                                <Menu.Item key={"1"}>Quản trị viên</Menu.Item>
-                                <Menu.Item key={"2"}>Nhà cung cấp</Menu.Item>
-                                <Menu.Item key={"3"}>Khách hàng</Menu.Item>
-                                <Menu.Item key={"4"}>Quyền chủ thể dữ liệu</Menu.Item>
-                            </Menu.SubMenu>
-                            <Menu.SubMenu key={"sub2"} icon={<UserSwitchOutlined />} title="Phân quyền">
-                                <Menu.Item key={"5"}>Quản trị viên</Menu.Item>
-                                <Menu.Item key={"6"}>Nhà cung cấp</Menu.Item>
-                                <Menu.Item key={"7"}>Khách hàng</Menu.Item>
-                            </Menu.SubMenu>
-                            <Menu.SubMenu key={"sub3"} icon={<UserAddOutlined />} title="Khách hàng">
-                                <Menu.Item key={"8"}>Doanh nghiệp</Menu.Item>
-                                <Menu.Item key={"9"}>Cá nhân</Menu.Item>
-                                <Menu.Item key={"10"}>Hộ kinh doanh</Menu.Item>
-                                <Menu.Item key={"11"}>Nhóm khách hàng</Menu.Item>
-                            </Menu.SubMenu>
-                            <Menu.SubMenu key={"sub4"} icon={<AppstoreOutlined />} title="Phân quyền">
-                                <Menu.Item key={"12"}>Hoa hồng</Menu.Item>
-                                <Menu.Item key={"13"}>Thanh toán hoa hồng</Menu.Item>
-                                <Menu.Item key={"14"}>Phí</Menu.Item>
-                            </Menu.SubMenu>
-                        </Menu>
+                        />
                     </Sider>
                     <FeeManagement />
                 </Layout>
