@@ -1,7 +1,9 @@
 import React from 'react';
-import { Form, Input, InputNumber, Radio, Select, Switch, Collapse, Button } from 'antd';
+import { Form, Input, Radio, Select, Switch, Collapse, Button } from 'antd';
 import { RollbackOutlined } from '@ant-design/icons';
 import { useLocation, NavLink } from 'react-router-dom';
+import PriceInput from './price-input';
+const { Option } = Select;
 
 export default function Detail() {
     const location = useLocation();
@@ -18,7 +20,7 @@ export default function Detail() {
 
             <Collapse bordered={false} defaultActiveKey={['1', '2', '3']}>
                 <Collapse.Panel header="Đối tượng áp dụng" key="1">
-                    <Form.Item label="Đối tượng áp dụng" disabled rules={{required: true}}>
+                    <Form.Item label="Đối tượng áp dụng" disabled>
                         <Radio.Group value={data.radio}>
                             <Radio value={1}>Nhà cung cấp dịch vụ</Radio>
                             <Radio value={2}>Khách hàng</Radio>
@@ -27,14 +29,18 @@ export default function Detail() {
                 </Collapse.Panel>
 
                 <Collapse.Panel header="Thông tin chung" key="2">
-                    <Form.Item label="Tên phí" rules={{required: true}}>
+                    <Form.Item label="Tên phí">
                         <Input value={data.feeName} disabled />
                     </Form.Item>
                     <Form.Item label="Mã phí">
                         <Input value={data.feeCode} disabled />
                     </Form.Item>
-                    <Form.Item label="Phương thức thanh toán" rules={{required: true}}>
-                        <Input value={data.paycheck} disabled />
+                    <Form.Item label="Phương thức thanh toán">
+                        <Select value={data.paycheck} disabled>
+                            <Option value={1}>Chuyển khoản</Option>
+                            <Option value={2}>Thanh toán qua thẻ tín dụng</Option>
+                            <Option value={3}>Ví điện tử</Option>
+                        </Select>
                     </Form.Item>
                     <Form.Item label="Mô tả">
                         <Input.TextArea value={data.textArea} disabled />
@@ -45,22 +51,22 @@ export default function Detail() {
                 </Collapse.Panel>
 
                 <Collapse.Panel header="Thông tin phân loại" key="3">
-                    <Form.Item label="Kiểu phí" rules={{required: true}}>
+                    <Form.Item label="Kiểu phí">
                         <Select value={data.feeType} disabled>
-                            <Select.Option value={1}>Phí cố định</Select.Option>
-                            <Select.Option value={2}>Phí tùy biến</Select.Option>
+                            <Option value={1}>Phí cố định</Option>
+                            <Option value={2}>Phí tùy biến</Option>
                         </Select>
                     </Form.Item>
-                    <Form.Item label="Loại phí" rules={{required: true}}>
+                    <Form.Item label="Loại phí">
                         <Select value={data.feeCategories} disabled>
-                            <Select.Option value={1}>Phí cố định</Select.Option>
-                            <Select.Option value={2}>Phí định kỳ</Select.Option>
-                            <Select.Option value={3}>Phân tầng</Select.Option>
-                            <Select.Option value={4}>Phân chia doanh thu</Select.Option>
+                            <Option value={1}>Phí cố định</Option>
+                            <Option value={2}>Phí định kỳ</Option>
+                            <Option value={3}>Phân tầng</Option>
+                            <Option value={4}>Phân chia doanh thu</Option>
                         </Select>
                     </Form.Item>
-                    <Form.Item label="Giá trị phí" rules={{required: true}}>
-                        <InputNumber value={data.price} disabled style={{ width: "100%" }} suffix="VND" />
+                    <Form.Item label="Giá trị phí">
+                        <PriceInput value={data.price} disabled suffix="VND" />
                     </Form.Item>
                     <Form.Item>
                         <NavLink to="/dashboard">

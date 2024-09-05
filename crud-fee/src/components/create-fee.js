@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
     Button,
     Form,
@@ -14,7 +14,7 @@ import api from "./baseURL";
 import PriceInput from "./price-input";
 const randomNumber = Math.floor(100000 + Math.random() * 900000);
 
-export default function CreateFee() {
+export default function CreateFee({addNewFee}) {
 
     const [radio, setRadio] = useState(null);
     const [feeName, setFeeName] = useState('');
@@ -27,23 +27,9 @@ export default function CreateFee() {
     const [price, setPrice] = useState({ number: 0, currency: 'VND' });
 
     const [form] = Form.useForm();
-    const {state} = useLocation();
+    const { state } = useLocation();
     const navigate = useNavigate();
     const { Option } = Select;
-
-    useEffect(() => {
-        if (state) {
-            setRadio(state.radio);
-            setFeeName(state.feeName);
-            setFeeCode(state.feeCode);
-            setPaycheck(state.paycheck);
-            setTextArea(state.textArea);
-            setFeeType(state.feeType);
-            setFeeCategories(state.feeCategories);
-            setActiveStatus(state.activeStatus);
-            setPrice(state.price);
-        }
-    }, [state])
 
     const handleSubmit = async () => {
         try {
@@ -58,12 +44,9 @@ export default function CreateFee() {
                 activeStatus,
                 price
             };
-            if (state) {
-                await api.put(`/fees/update/${state.key}`, payload);
-            } else {
-                await api.post("/fees/create", payload);
-            }
-            navigate("/dashboard/detail");
+            await api.post('/fees/create', payload);
+            addNewFee(payload);
+            navigate("/dashboard/detail", { state: { ...payload } });
         } catch (e) {
             console.log("An error occurred:", e);
         }
@@ -100,7 +83,7 @@ export default function CreateFee() {
                 onFinish={handleSubmit}
                 onFinishFailed={onFinishFailed}
             >
-                <span className="title-feelist" style={{padding: 500}}>TẠO PHÍ</span>
+                <span className="title-feelist" style={{ padding: 500 }}>TẠO PHÍ</span>
                 <Collapse bordered={false} defaultActiveKey={['1', '2', '3']}>
                     <Collapse.Panel header="Đối tượng áp dụng" key="1">
                         <Form.Item
@@ -145,11 +128,10 @@ export default function CreateFee() {
                                 label="Mã phí"
                                 name="feeCode"
                                 style={{ width: "100%" }}
-                                initialValue={randomNumber}
+                                initialValue={`FE${randomNumber}`}
                             >
                                 <Input
                                     value={feeCode}
-                                    prefix="FE"
                                     onChange={(value) => setFeeCode(value)}
                                     disabled
                                 />
