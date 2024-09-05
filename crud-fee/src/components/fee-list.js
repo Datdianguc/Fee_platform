@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Table, Tag, Input, Button } from 'antd';
 import "../css/fee-list.css"
 import { DeleteOutlined, PlusOutlined, EditOutlined } from '@ant-design/icons';
-import { Route, useNavigate } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 import api from './baseURL';
 import CreateFee from './create-fee';
 
@@ -207,37 +207,37 @@ const FeeManagement = (props) => {
     };
 
     return (
-        <main className="content-container-feelist">
-            <div className="search-title-feelist-container">
-                <span className="title-feelist">DANH SÁCH PHÍ</span>
-                <Route path="/dashboard/create-fee" element={<CreateFee addNewFee={addNewFee} />}>
-                    <Button className='add-fee'>Tạo phí<PlusOutlined /></Button>
-                </Route>
-                <Search
-                    placeholder="Tìm kiếm"
-                    allowClear
-                    size="large"
-                    onSearch={value => console.log(value)}
-                    style={{ width: 350, padding: "16px" }}
-                />
-            </div>
-            <div className='table-feelist-container'>
-                <Table
-                    rowKey={(record) => {
-                        return record.key;
-                    }}
-                    rowSelection={{
-                        ...rowSelection,
-                        preserveSelectedRowKeys: true,
-                    }}
-                    columns={columns}
-                    dataSource={data}
-                    pagination={tableParams.pagination}
-                    loading={loading}
-                    onChange={(pagination) => setTableParams({ pagination })}
-                />
-            </div>
-        </main >
+                <main className="content-container-feelist">
+                    <div className="search-title-feelist-container">
+                        <span className="title-feelist">DANH SÁCH PHÍ</span>
+                        <NavLink to="/dashboard/create-fee" element={<CreateFee addNewFee={addNewFee} />}>
+                            <Button className='add-fee'>Tạo phí<PlusOutlined /></Button>
+                        </NavLink>
+                        <Search
+                            placeholder="Tìm kiếm"
+                            allowClear
+                            size="large"
+                            onSearch={value => console.log(value)}
+                            style={{ width: 350, padding: "16px" }}
+                        />
+                    </div>
+                    <div className='table-feelist-container'>
+                        <Table
+                            rowKey={(record) => {
+                                return record.key;
+                            }}
+                            rowSelection={{
+                                ...rowSelection,
+                                preserveSelectedRowKeys: true,
+                            }}
+                            columns={columns}
+                            dataSource={data}
+                            pagination={tableParams.pagination}
+                            loading={loading}
+                            onChange={(pagination) => setTableParams({ pagination })}
+                        />
+                    </div>
+                </main >
     );
 };
 export default FeeManagement;
